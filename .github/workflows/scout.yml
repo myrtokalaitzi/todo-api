@@ -1,0 +1,44 @@
+name: SBOM/SCA Scout
+on:
+  workflow_dispatch:
+    inputs:
+        docker_image:
+          description: 'The Docker image to scan'
+          required: true
+          default: 'ghcr.io/myrtokalaitzi/todo-api:latest'
+jobs:
+  scout:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      packages: write
+      security-events: write
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Login to Dockerhub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - name: Pull the image
+        run: docker pull ${{ github.event.inputs.docker_image }}
+      - name: Docker Scout
+        uses: docker/scout-action@v1
+        with:
+          command: cves,recommendations,sbom
+          image: ${{ github.event.inputs.docker_image }}
+          exit-code: false
+          sarif-file: sca_scout.sarif
+          output: sbom_scout.spdx.json
+          format: spdx
+      - name: Upload SBOM artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: sbom_scout.spdx.json
+          path: sbom_scout.spdx.json
+      - name: Upload SARIF artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: sca_scout.sarif
+          path: sca_scout.sarif
