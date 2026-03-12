@@ -40,7 +40,7 @@ jobs:
 
       - name: Docker Scout CVE Scan
         run: |
-          docker scout cves ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest --exit-code false
+          docker scout cves ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest --exit-on 0
         env:
           DOCKER_SCOUT_HUB_USER: ${{ github.actor }}
           DOCKER_SCOUT_HUB_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
