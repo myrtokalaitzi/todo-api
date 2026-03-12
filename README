@@ -1,0 +1,26 @@
+# To-Do List API
+
+A simple in-memory CRUD REST API for managing tasks, built with FastAPI.
+
+## Endpoints
+
+| Method | URL | Description |
+|--------|-----|-------------|
+| GET | `/` | API status |
+| GET | `/tasks` | Get all tasks |
+| GET | `/tasks/{id}` | Get one task |
+| POST | `/tasks` | Create task |
+| PATCH | `/tasks/{id}/done` | Mark as done |
+| DELETE | `/tasks/{id}` | Delete task |
+
+## Run locally
+```bash
+docker build -t todo-api .
+docker run -p 8000:8000 todo-api
+```
+
+Visit `http://localhost:8000/docs` for interactive docs.
+
+## CI/CD Pipeline
+
+GitHub Actions workflow that builds the image, pushes to ghcr.io, and runs Docker Scout CVE scanning.
